@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<form method="get" class="input-group mb-4">
+  <input name="q" value="{{ query }}" class="form-control" placeholder="GitHub username, e.g. torvalds" required>
+  <button class="btn btn-primary">Search</button>
+</form>
+
+{% if profile %}
+<div class="card mb-4">
+  <div class="card-body d-flex gap-3">
+    <img src="{{ profile.avatar_url }}" width="96" height="96" class="rounded-circle" alt="">
+    <div class="flex-grow-1">
+      <h4>
+        <a href="{{ profile.html_url }}" target="_blank">{{ profile.name|default:profile.username }}</a>
+        <small class="text-muted">@{{ profile.username }}</small>
+      </h4>
+      <p>{{ profile.bio|default:"No bio." }}</p>
+      <p class="mb-2">Followers: <b>{{ profile.followers }}</b> &middot; Public repos: <b>{{ profile.public_repos }}</b></p>
+
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'bookmark' profile.username %}">
+          {% csrf_token %}
+          <button class="btn btn-success btn-sm">Bookmark</button>
+        </form>
+      {% else %}
+        <a href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" class="small">Log in to bookmark</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<h5>Recently updated repositories</h5>
+<ul class="list-group">
+  {% for repo in repos %}
+  <li class="list-group-item">
+    <a href="{{ repo.html_url }}" target="_blank">{{ repo.name }}</a>
+    <span class="badge text-bg-secondary ms-2">{{ repo.language }}</span>
+    <span class="ms-2">&#9733; {{ repo.stars }}</span>
+    {% if repo.description %}<div class="small text-muted">{{ repo.description }}</div>{% endif %}
+  </li>
+  {% empty %}
+  <li class="list-group-item text-muted">No public repositories.</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% endblock %} 

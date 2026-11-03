@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<h4 class="mb-3">My Bookmarks</h4>
+
+{% for b in bookmarks %}
+<div class="card mb-2">
+  <div class="card-body d-flex align-items-center gap-3">
+    <img src="{{ b.avatar_url }}" width="56" height="56" class="rounded-circle" alt="">
+    <div class="flex-grow-1">
+      <a href="{{ b.html_url }}" target="_blank" class="fw-bold">{{ b.username }}</a>
+      <div class="small text-muted">{{ b.name }} &middot; {{ b.followers }} followers &middot; {{ b.public_repos }} repos</div>
+    </div>
+    <a href="{% url 'search' %}?q={{ b.username }}" class="btn btn-sm btn-outline-primary">View</a>
+    <form method="post" action="{% url 'bookmark_delete' b.pk %}" class="m-0">
+      {% csrf_token %}
+      <button class="btn btn-sm btn-outline-danger">Remove</button>
+    </form>
+  </div>
+</div>
+{% empty %}
+<p class="text-muted">No bookmarks yet. <a href="{% url 'search' %}">Search a user</a>.</p>
+{% endfor %}
+
+{% endblock %} 
