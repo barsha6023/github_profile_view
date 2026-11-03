@@ -84,7 +84,7 @@ def get_repos(username, limit=10):
  "stars": repo.get("stargazers_count", 0),
  "html_url": repo.get("html_url", ""),
  }
- for repo in data
+ for repo in data 
  ]
 
  
