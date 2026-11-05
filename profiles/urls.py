@@ -6,5 +6,6 @@ urlpatterns = [
  path("bookmarks/", views.bookmark_list, name="bookmarks"),
  path("bookmarks/<int:pk>/delete/", views.bookmark_delete, name="bookmark_delete"),
  path("visualise/", views.visualise, name="visualise"),
+ path("api/", views.api, name="api"),
 ]
 
